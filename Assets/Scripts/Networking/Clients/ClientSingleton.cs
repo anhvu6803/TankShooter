@@ -7,7 +7,7 @@ public class ClientSingleton : MonoBehaviour
 {
     private static ClientSingleton instance;
     public ClientGameManager GameManager { get; private set; }
-    public static ClientSingleton Instances
+    public static ClientSingleton Instance
     {
         get
         {
