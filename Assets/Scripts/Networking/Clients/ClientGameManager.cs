@@ -11,14 +11,18 @@ using Unity.Services.Relay.Models;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Text;
+using Unity.Services.Authentication;
 
 public class ClientGameManager
 {
     private const string MenuSceneName = "MainMenu";
     private JoinAllocation joinAllocation;
+    private NetworkClient networkClient;
     public async Task<bool> InitAsync()
     {
         await UnityServices.InitializeAsync();
+
+        networkClient = new NetworkClient(NetworkManager.Singleton);
 
         AuthState authState = await AuthenticationWrapper.DoAuth();
         if(authState == AuthState.Authenticated)
@@ -49,7 +53,8 @@ public class ClientGameManager
 
         UserData userData = new UserData
         {
-            userName = PlayerPrefs.GetString(NameSelecter.PlayerNameKey, "Missing Name")
+            userName = PlayerPrefs.GetString(NameSelecter.PlayerNameKey, "Missing Name"),
+            userAuthId = AuthenticationService.Instance.PlayerId
         };
         string payload = JsonUtility.ToJson(userData);
         byte[] payLoadBytes = Encoding.UTF8.GetBytes(payload);
