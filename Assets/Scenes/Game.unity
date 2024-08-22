@@ -1635,6 +1635,7 @@ GameObject:
   - component: {fileID: 519420032}
   - component: {fileID: 519420031}
   - component: {fileID: 519420029}
+  - component: {fileID: 519420033}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1685,7 +1686,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 10
+  orthographic size: 12
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -1716,6 +1717,40 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &519420033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72ece51f2901e7445ab60da3685d6b5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ShowDebugText: 0
+  m_ShowCameraFrustum: 1
+  m_IgnoreTimeScale: 0
+  m_WorldUpOverride: {fileID: 0}
+  m_UpdateMethod: 2
+  m_BlendUpdateMethod: 1
+  m_DefaultBlend:
+    m_Style: 1
+    m_Time: 2
+    m_CustomCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+  m_CustomBlends: {fileID: 0}
+  m_CameraCutEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_CameraActivatedEvent:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1001 &590127530
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2063,12 +2098,16 @@ PrefabInstance:
     m_TransformParent: {fileID: 1072252844}
     m_Modifications:
     - target: {fileID: 3059176587303719432, guid: 6ba8cc54717f9c84d96424121fe55ae1, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.15632
+      objectReference: {fileID: 0}
+    - target: {fileID: 3059176587303719432, guid: 6ba8cc54717f9c84d96424121fe55ae1, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -6.5
+      value: -6.2302
       objectReference: {fileID: 0}
     - target: {fileID: 3059176587303719432, guid: 6ba8cc54717f9c84d96424121fe55ae1, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 17.5
+      value: 17.7996
       objectReference: {fileID: 0}
     - target: {fileID: 3059176587303719432, guid: 6ba8cc54717f9c84d96424121fe55ae1, type: 3}
       propertyPath: m_LocalPosition.z
@@ -3309,7 +3348,7 @@ GameObject:
   - component: {fileID: 1333013813}
   m_Layer: 0
   m_Name: Background
-  m_TagString: Untagged
+  m_TagString: Background
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3360,7 +3399,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 2
-  m_Size: {x: 100, y: 100}
+  m_Size: {x: 200, y: 200}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -4698,7 +4737,7 @@ MonoBehaviour:
       - {fileID: 11400000, guid: 60feffb329c8f764aafcffa68e9d153f, type: 2}
     TickRate: 30
     ClientConnectionBufferTimeout: 10
-    ConnectionApproval: 0
+    ConnectionApproval: 1
     ConnectionData: 
     EnableTimeResync: 0
     TimeResyncInterval: 30
