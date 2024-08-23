@@ -523,6 +523,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   virtualCamera: {fileID: 1158226276669591508}
+  <Health>k__BackingField: {fileID: -1956572642297787565}
   camPriority: 15
   PlayerName:
     m_InternalValue:
