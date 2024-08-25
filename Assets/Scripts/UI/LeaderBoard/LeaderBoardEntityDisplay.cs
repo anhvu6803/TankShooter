@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LeaderBoardEntity : MonoBehaviour
+public class LeaderBoardEntityDisplay : MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()
