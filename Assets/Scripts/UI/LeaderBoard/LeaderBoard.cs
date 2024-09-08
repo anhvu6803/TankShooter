@@ -78,7 +78,7 @@ public class LeaderBoard : NetworkBehaviour
                 if (displayToRemove != null)
                 {
                     displayToRemove.transform.SetParent(null);
-                    Destroy(displayToRemove);
+                    Destroy(displayToRemove.gameObject);
                     entityDisplays.Remove(displayToRemove);
                 }
                 break;
@@ -121,22 +121,20 @@ public class LeaderBoard : NetworkBehaviour
 
         });
 
-        player.wallet.TotalCoin.OnValueChanged += (oldCoins, newCoins) => 
+        player.Wallet.TotalCoin.OnValueChanged += (oldCoins, newCoins) => 
         HandleCoinsChanged(player.OwnerClientId, newCoins);
     }
     private void HandlePlayerDespawned(TankPlayer player)
     {
-        if(leaderBoardEntities == null) return;
-
-        foreach(var entity in leaderBoardEntities)
+        foreach (LeaderBoardEntityState entity in leaderBoardEntities)
         {
-            if(entity.ClientId != player.OwnerClientId) { continue; }
-            
+            if (entity.ClientId != player.OwnerClientId) { continue; }
+
             leaderBoardEntities.Remove(entity);
             break;
         }
 
-        player.wallet.TotalCoin.OnValueChanged -= (oldCoins, newCoins) =>
+        player.Wallet.TotalCoin.OnValueChanged -= (oldCoins, newCoins) =>
         HandleCoinsChanged(player.OwnerClientId, newCoins);
     }
     private void HandleCoinsChanged(ulong clientId, int newCoins)

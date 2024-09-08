@@ -12,7 +12,7 @@ public class TankPlayer : NetworkBehaviour
     [Header("References")]
     [SerializeField] private CinemachineVirtualCamera virtualCamera;
     [field: SerializeField] public Heath Health {  get; private set; }
-    [field: SerializeField] public CoinWallet wallet {  get; private set; }
+    [field: SerializeField] public CoinWallet Wallet {  get; private set; }
     [Header("Settings")]
     [SerializeField] private int camPriority = 15;
 
@@ -34,7 +34,7 @@ public class TankPlayer : NetworkBehaviour
     }
     public override void OnNetworkDespawn()
     {
-        if(IsServer)
+        if (IsServer)
         {
             OnPlayerDespawned?.Invoke(this);
         }
