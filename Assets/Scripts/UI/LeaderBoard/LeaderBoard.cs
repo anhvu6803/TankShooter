@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -9,6 +11,7 @@ public class LeaderBoard : NetworkBehaviour
     [SerializeField] private Transform leaderBoardEnityHolder;
     [SerializeField] private LeaderBoardEntityDisplay leaderBoardEntityPrefab;
     private NetworkList<LeaderBoardEntityState> leaderBoardEntities;
+    private List<LeaderBoardEntityDisplay> entityDisplays = new List<LeaderBoardEntityDisplay>();
     private void Awake()
     {
         leaderBoardEntities = new NetworkList<LeaderBoardEntityState>();
@@ -56,9 +59,34 @@ public class LeaderBoard : NetworkBehaviour
         switch(changeEvent.Type)
         {
             case NetworkListEvent<LeaderBoardEntityState>.EventType.Add:
-                Instantiate(leaderBoardEntityPrefab, leaderBoardEnityHolder);
+                if(!entityDisplays.Any(x => x.ClientId == changeEvent.Value.ClientId))
+                {
+                    LeaderBoardEntityDisplay leaderBoardEntity = 
+                        Instantiate(leaderBoardEntityPrefab, leaderBoardEnityHolder);
+                    leaderBoardEntity.Initialise(
+                        changeEvent.Value.ClientId,
+                        changeEvent.Value.PlayerName,
+                        changeEvent.Value.Coins);
+                    entityDisplays.Add(leaderBoardEntity);
+                }
                 break;
             case NetworkListEvent<LeaderBoardEntityState>.EventType.Remove:
+                LeaderBoardEntityDisplay displayToRemove =
+                    entityDisplays.FirstOrDefault(x => x.ClientId == changeEvent.Value.ClientId);
+                if (displayToRemove != null)
+                {
+                    displayToRemove.transform.SetParent(null);
+                    Destroy(displayToRemove);
+                    entityDisplays.Remove(displayToRemove);
+                }
+                break;
+            case NetworkListEvent<LeaderBoardEntityState>.EventType.Value:
+                LeaderBoardEntityDisplay displayToUpdate =
+                    entityDisplays.FirstOrDefault(x => x.ClientId == changeEvent.Value.ClientId);
+                if (entityDisplays != null)
+                {
+                    displayToUpdate.UpdateCoins(changeEvent.Value.Coins);
+                }
                 break;
         }
     }
@@ -85,5 +113,4 @@ public class LeaderBoard : NetworkBehaviour
             break;
         }
     }
-    
 }
