@@ -26,8 +26,10 @@ public class RespawnCoin : Coin
         {
             return 0;
         }
-        OnCollected?.Invoke(this);
         isAlreadyCollected = true;
+
+        OnCollected?.Invoke(this);
+
         return coinValue;
     }
     public void Reset()
