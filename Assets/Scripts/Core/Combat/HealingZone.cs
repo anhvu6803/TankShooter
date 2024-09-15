@@ -36,7 +36,7 @@ public class HealingZone : NetworkBehaviour
     {
         if (IsClient)
         {
-            HealPower.OnValueChanged += HandleHealPowerChange;
+            HealPower.OnValueChanged -= HandleHealPowerChange;
         }
     }
     private void OnTriggerEnter2D(Collider2D collision)
@@ -46,7 +46,6 @@ public class HealingZone : NetworkBehaviour
         if(collision.TryGetComponent<TankPlayer>(out TankPlayer player))
         {
             playersInZone.Add(player);
-            Debug.Log($"Entered: {player.PlayerName.Value}");
         }
     }
     private void OnTriggerExit2D(Collider2D collision)
@@ -56,7 +55,6 @@ public class HealingZone : NetworkBehaviour
         if (collision.TryGetComponent<TankPlayer>(out TankPlayer player))
         {
             playersInZone.Remove(player);
-            Debug.Log($"Left: {player.PlayerName.Value}");
         }
     }
     private void Update()
@@ -86,9 +84,9 @@ public class HealingZone : NetworkBehaviour
                 if (player.Health.currentHealth.Value == player.Health.MaxHealth) { continue; }
 
                 if (player.Wallet.TotalCoin.Value < coinsPerTick) { continue; }
-
-                player.Health.RestoreHealth(healthPerTick);
+                
                 player.Wallet.SpendCoin(coinsPerTick);
+                player.Health.RestoreHealth(healthPerTick); 
 
                 HealPower.Value -= 1;
                 if(HealPower.Value == 0)

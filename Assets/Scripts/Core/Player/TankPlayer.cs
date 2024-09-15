@@ -11,10 +11,12 @@ public class TankPlayer : NetworkBehaviour
 {
     [Header("References")]
     [SerializeField] private CinemachineVirtualCamera virtualCamera;
+    [SerializeField] private SpriteRenderer minimapIconRenderer;
     [field: SerializeField] public Heath Health {  get; private set; }
     [field: SerializeField] public CoinWallet Wallet {  get; private set; }
     [Header("Settings")]
     [SerializeField] private int camPriority = 15;
+    [SerializeField] private Color ownerColor;
 
     public NetworkVariable<FixedString32Bytes> PlayerName = new NetworkVariable<FixedString32Bytes>();
     public static event Action<TankPlayer> OnPlayerSpawned;
@@ -30,6 +32,8 @@ public class TankPlayer : NetworkBehaviour
         if (IsOwner)
         {
             virtualCamera.Priority = camPriority;
+
+            minimapIconRenderer.color = ownerColor;
         }
     }
     public override void OnNetworkDespawn()

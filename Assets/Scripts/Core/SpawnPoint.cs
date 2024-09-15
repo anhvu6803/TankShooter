@@ -22,7 +22,6 @@ public class SpawnPoint : MonoBehaviour
     {
         if (spawnPoints.Count == 0)
         {
-            Debug.Log($"spawnPoints Count {spawnPoints.Count}");
             return Vector3.zero;
         }
 
@@ -34,5 +33,4 @@ public class SpawnPoint : MonoBehaviour
         Gizmos.color = Color.blue;
         Gizmos.DrawSphere(transform.position, 1);
     }
-
 }
