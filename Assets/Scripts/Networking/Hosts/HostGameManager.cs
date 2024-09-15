@@ -85,8 +85,24 @@ public class HostGameManager : IDisposable
         NetworkManager.Singleton.NetworkConfig.ConnectionData = payLoadBytes;
 
         NetworkManager.Singleton.StartHost();
+
+        NetworkServer.onClientLeft += HandleClientLeft;
+
         NetworkManager.Singleton.SceneManager.LoadScene(GameScene, LoadSceneMode.Single);
     }
+
+    private async void HandleClientLeft(string authId)
+    {
+        try
+        {
+            await LobbyService.Instance.RemovePlayerAsync(lobbyId, authId);
+        }
+        catch(LobbyServiceException e)
+        {
+            Debug.Log(e);
+        }
+    }
+
     private IEnumerator HeartBeatLobby(float waitTimeSecond)
     {
         while(true)
@@ -98,18 +114,26 @@ public class HostGameManager : IDisposable
 
     public async void Dispose()
     {
+        Shutdown();
+    }
+
+    public async void Shutdown()
+    {
         HostSingleton.Instance.StopCoroutine(nameof(HeartBeatLobby));
-        if(!string.IsNullOrEmpty(lobbyId))
+        if (!string.IsNullOrEmpty(lobbyId))
         {
             try
             {
                 await Lobbies.Instance.DeleteLobbyAsync(lobbyId);
             }
-            catch(LobbyServiceException e)
+            catch (LobbyServiceException e)
             {
                 Debug.Log(e);
             }
         }
+
+        NetworkServer.onClientLeft -= HandleClientLeft;
+
         NetworkServer?.Dispose();
     }
 }

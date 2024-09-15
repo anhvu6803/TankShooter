@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6628949558167460472}
   - component: {fileID: 7907308822092910394}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: MiniMapIcon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -95,7 +95,7 @@ GameObject:
   - component: {fileID: 3764034486203724544}
   - component: {fileID: 3497053506273115723}
   - component: {fileID: 1249459659680067561}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -172,7 +172,7 @@ GameObject:
   - component: {fileID: 3585466220256269238}
   - component: {fileID: -1359833149523882273}
   - component: {fileID: -7429501928075496}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: HealingZone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -208,7 +208,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1842626852
+  GlobalObjectIdHash: 3428273333
   InScenePlacedSourceGlobalObjectIdHash: 3121546859
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -344,7 +344,7 @@ GameObject:
   - component: {fileID: 3976286204995883250}
   - component: {fileID: 2188278144778645340}
   - component: {fileID: 3674019419590982879}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
