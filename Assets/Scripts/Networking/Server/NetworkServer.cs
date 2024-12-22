@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
+using Unity.Netcode.Transports.UTP;
 using UnityEngine;
 
 public class NetworkServer : IDisposable
@@ -10,6 +11,8 @@ public class NetworkServer : IDisposable
     private Dictionary<ulong, string>clientIdToAuth = new Dictionary<ulong, string>();
     private Dictionary<string, UserData>authIdToUserData = new Dictionary<string, UserData>();
 
+    public Action<UserData> onUserJoined;
+    public Action<UserData> onUserLeft;
     public Action<string> onClientLeft;
     public NetworkServer(NetworkManager networkManager)
     {
@@ -17,6 +20,14 @@ public class NetworkServer : IDisposable
         networkManager.ConnectionApprovalCallback += ApprovalCheck;
         networkManager.OnServerStarted += OnNetworkReady;
     }
+
+    public bool OpenConnection(string ip, int port)
+    {
+        UnityTransport transport = networkManager.gameObject.GetComponent<UnityTransport>();
+        transport.SetConnectionData(ip, (ushort)port);
+        return networkManager.StartServer();
+    }
+
     public UserData GetUserDataByClientId(ulong clientId)
     {
         if(clientIdToAuth.TryGetValue(clientId, out string authId))
@@ -36,6 +47,7 @@ public class NetworkServer : IDisposable
 
         clientIdToAuth[request.ClientNetworkId] = userData.userAuthId;
         authIdToUserData[userData.userAuthId] = userData;
+        onUserJoined?.Invoke(userData);
 
         response.Approved = true;
         response.Position = SpawnPoint.GetRandomSpawnPos();
@@ -52,8 +64,9 @@ public class NetworkServer : IDisposable
         if(clientIdToAuth.TryGetValue(clientId, out string authId))
         {
             clientIdToAuth.Remove(clientId);
+            onUserLeft?.Invoke(authIdToUserData[authId]);
             authIdToUserData.Remove(authId);
-            onClientLeft?.Invoke(authId);
+            onClientLeft?.Invoke(authId);           
         }
     }
 

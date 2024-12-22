@@ -112,24 +112,23 @@ public class HostGameManager : IDisposable
         }
     }
 
-    public async void Dispose()
+    public void Dispose()
     {
         Shutdown();
     }
 
     public async void Shutdown()
     {
+        if (string.IsNullOrEmpty(lobbyId)) { return; }
         HostSingleton.Instance.StopCoroutine(nameof(HeartBeatLobby));
-        if (!string.IsNullOrEmpty(lobbyId))
+
+        try
         {
-            try
-            {
-                await Lobbies.Instance.DeleteLobbyAsync(lobbyId);
-            }
-            catch (LobbyServiceException e)
-            {
-                Debug.Log(e);
-            }
+            await Lobbies.Instance.DeleteLobbyAsync(lobbyId);
+        }
+        catch (LobbyServiceException e)
+        {
+            Debug.Log(e);
         }
 
         NetworkServer.onClientLeft -= HandleClientLeft;
