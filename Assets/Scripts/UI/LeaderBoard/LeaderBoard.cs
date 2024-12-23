@@ -57,6 +57,8 @@ public class LeaderBoard : NetworkBehaviour
 
     private void HandleLeaderboardEntitiesChanged(NetworkListEvent<LeaderBoardEntityState> changeEvent)
     {
+        if (!gameObject.scene.isLoaded) { return; }
+
         switch (changeEvent.Type)
         {
             case NetworkListEvent<LeaderBoardEntityState>.EventType.Add:

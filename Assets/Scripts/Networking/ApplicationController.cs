@@ -1,14 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ApplicationController : MonoBehaviour
 {
     [SerializeField] private ClientSingleton clientPrefab;
     [SerializeField] private HostSingleton hostPrefab;
     [SerializeField] private ServerSingleton serverPrefab;
+    [SerializeField] private NetworkObject playerPrefab;
 
+    private const string GameScene = "Game";
     private ApplicationData appData;
     private async void Start()
     {
@@ -19,15 +23,15 @@ public class ApplicationController : MonoBehaviour
     {
         if (isDedecatedServer)
         {
+            Application.targetFrameRate = 60;
             appData = new ApplicationData();
             ServerSingleton serverSingleton = Instantiate(serverPrefab);
-            await serverSingleton.CreatServer();
-            await serverSingleton.GameManager.StartGameServerAsync();
+            StartCoroutine(LoadGameSceneAsync(serverSingleton));
         }
         else
         {
             HostSingleton hostInstance = Instantiate(hostPrefab);
-            hostInstance.CreatHost();
+            hostInstance.CreatHost(playerPrefab);
 
             ClientSingleton clientInstance = Instantiate(clientPrefab);
             bool authenticated = await clientInstance.CreatClient();
@@ -37,5 +41,20 @@ public class ApplicationController : MonoBehaviour
                 clientInstance.GameManager.GoToMenu();
             }
         }
+    }
+    private IEnumerator LoadGameSceneAsync(ServerSingleton serverSingleton)
+    {
+        AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(GameScene);
+
+        while (!asyncOperation.isDone)
+        {
+            yield return null;
+        }
+
+        Task createServerTask = serverSingleton.CreatServer(playerPrefab);
+        yield return new WaitUntil(() =>  createServerTask.IsCompleted);
+
+        Task startServerTask =  serverSingleton.GameManager.StartGameServerAsync();
+        yield return new WaitUntil(() => startServerTask.IsCompleted);
     }
 }
