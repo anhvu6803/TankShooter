@@ -88,12 +88,14 @@ public class ClientGameManager : IDisposable
         }
         return matchmakingResult.result;
     }
-    public async void MatchmakeAsync(Action<MatchmakerPollingResult> onMatchmakeResponse)
+    public async void MatchmakeAsync(bool isTeamQueue, Action<MatchmakerPollingResult> onMatchmakeResponse)
     {
         if (matchmaker.IsMatchmaking)
         {
             return;
         }
+
+        userData.userGamePreferences.gameQueue = isTeamQueue ? GameQueue.Team : GameQueue.Solo;
         MatchmakerPollingResult matchResult = await GetMatchAsync();
         onMatchmakeResponse(matchResult);
     }
