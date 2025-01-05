@@ -5107,6 +5107,7 @@ GameObject:
   - component: {fileID: -1956572642297787565}
   - component: {fileID: 2010398800030751286}
   - component: {fileID: 1194759230815730842}
+  - component: {fileID: 8841002122661880075}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -5406,6 +5407,25 @@ MonoBehaviour:
         byte0027: 0
         byte0028: 0
         byte0029: 0
+  TeamIndex:
+    m_InternalValue: 0
+--- !u!114 &8841002122661880075
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1848070127327801248}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15e87c481916fe84d8e283b218654b65, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  teamColorLookup: {fileID: 11400000, guid: 300d5c56c86621b4b8c513808f532775, type: 2}
+  player: {fileID: 1194759230815730842}
+  playerSprites:
+  - {fileID: 2818796807335940573}
+  - {fileID: 3510094995492345689}
 --- !u!1 &2146164152249134249
 GameObject:
   m_ObjectHideFlags: 0

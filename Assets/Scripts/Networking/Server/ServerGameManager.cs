@@ -24,6 +24,8 @@ public class ServerGameManager : IDisposable
     private MultiplayAllocationService multiplayAllocationService;
 
     public NetworkServer NetworkServer { get; private set; }
+
+    private Dictionary<string, int> teamIdToTeamIndex = new Dictionary<string, int>();
     public ServerGameManager(string serverIP, int serverPort, int serverQPort, NetworkManager manager, NetworkObject playerPrefab)
     {
         this.serverIP = serverIP;
@@ -86,6 +88,15 @@ public class ServerGameManager : IDisposable
     private void UserJoined(UserData userData) 
     {
         Team team = backfiller.GetTeamByUserId(userData.userAuthId);
+
+        if(!teamIdToTeamIndex.TryGetValue(team.TeamId, out int teamIndex))
+        {
+            teamIndex = teamIdToTeamIndex.Count;
+            teamIdToTeamIndex.Add(team.TeamId, teamIndex);
+        }
+
+        userData.teamIndex = teamIndex;
+
         multiplayAllocationService.AddPlayer();
         if (!backfiller.NeedsPlayers() && backfiller.IsBackfilling)
         {
