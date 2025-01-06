@@ -23,7 +23,7 @@ public class TeamColorDisplay : MonoBehaviour
     private void HandleTeamChanged(int oldIndex, int newIndex)
     {
         Color color = teamColorLookup.GetTeamColor(newIndex);
-        Debug.Log(color);
+
         foreach(SpriteRenderer sprite in playerSprites)
         {
             sprite.color = color;

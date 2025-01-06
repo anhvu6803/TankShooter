@@ -9,10 +9,17 @@ using UnityEngine;
 public class LeaderBoard : NetworkBehaviour
 {
     [SerializeField] private Transform leaderBoardEnityHolder;
+    [SerializeField] private Transform teamLeaderBoardEnityHolder;
+    [SerializeField] private GameObject teamLeaderBoardBackground;
     [SerializeField] private LeaderBoardEntityDisplay leaderBoardEntityPrefab;
     [SerializeField] private int entitiesToDisplay = 8;
+    [SerializeField] private Color ownerColor;
+    [SerializeField] private string[] teamNames;
+    [SerializeField] private TeamColorLookup teamColorLookup;
+
     private NetworkList<LeaderBoardEntityState> leaderBoardEntities;
     private List<LeaderBoardEntityDisplay> entityDisplays = new List<LeaderBoardEntityDisplay>();
+    private List<LeaderBoardEntityDisplay> teamEntityDisplays = new List<LeaderBoardEntityDisplay>();
     private void Awake()
     {
         leaderBoardEntities = new NetworkList<LeaderBoardEntityState>();
@@ -21,6 +28,23 @@ public class LeaderBoard : NetworkBehaviour
     {
         if(IsClient)
         {
+            if (ClientSingleton.Instance.GameManager.UserData.userGamePreferences.gameQueue == GameQueue.Team)
+            {
+                teamLeaderBoardBackground.SetActive(true);
+
+                for (int i = 0; i < teamNames.Length; i++)
+                {
+                    LeaderBoardEntityDisplay teamLeaderboardEnity = Instantiate(leaderBoardEntityPrefab, teamLeaderBoardEnityHolder);
+                    
+                    teamLeaderboardEnity.Initialise(i, teamNames[i], 0);
+
+                    Color teamColor = teamColorLookup.GetTeamColor(i);
+                    teamLeaderboardEnity.SetColor(teamColor);
+
+                    teamEntityDisplays.Add(teamLeaderboardEnity);
+                }
+            }
+            
             leaderBoardEntities.OnListChanged += HandleLeaderboardEntitiesChanged;
             foreach(var entity in leaderBoardEntities)
             {
@@ -71,6 +95,12 @@ public class LeaderBoard : NetworkBehaviour
                         changeEvent.Value.ClientId,
                         changeEvent.Value.PlayerName,
                         changeEvent.Value.Coins);
+
+                    if(NetworkManager.Singleton.LocalClientId == changeEvent.Value.ClientId)
+                    {
+                        leaderBoardEntity.SetColor(ownerColor);
+                    }
+
                     entityDisplays.Add(leaderBoardEntity);
                 }
                 break;
@@ -111,6 +141,32 @@ public class LeaderBoard : NetworkBehaviour
                 myDisplay.gameObject.SetActive(true);
             }
         }
+
+        if(teamLeaderBoardBackground.activeSelf) { return; }
+
+        LeaderBoardEntityDisplay teamDisplay =
+           teamEntityDisplays.FirstOrDefault(x => x.TeamIndex == changeEvent.Value.TeamIndex);
+
+        if (teamDisplay != null)
+        {
+            if(changeEvent.Type == NetworkListEvent<LeaderBoardEntityState>.EventType.Remove)
+            {
+                teamDisplay.UpdateCoins(teamDisplay.Coins - changeEvent.Value.Coins);
+            }
+            else
+            {
+                teamDisplay.UpdateCoins(
+                    teamDisplay.Coins + (changeEvent.Value.Coins - changeEvent.PreviousValue.Coins));
+            }
+
+            teamEntityDisplays.Sort((x, y) => y.Coins.CompareTo(x.Coins));
+        
+            for(int i = 0; i < teamEntityDisplays.Count; i++)
+            {
+                teamEntityDisplays[i].transform.SetSiblingIndex(i);
+                teamEntityDisplays[i].UpdateText();
+            }
+        }
     }
 
     private void HandlePlayerSpawned(TankPlayer player)
@@ -119,6 +175,7 @@ public class LeaderBoard : NetworkBehaviour
         {
             ClientId = player.OwnerClientId,
             PlayerName = player.PlayerName.Value,
+            TeamIndex = player.TeamIndex.Value,
             Coins = 0
 
         });
@@ -149,6 +206,7 @@ public class LeaderBoard : NetworkBehaviour
             {
                 ClientId = leaderBoardEntities[i].ClientId,
                 PlayerName = leaderBoardEntities[i].PlayerName,
+                TeamIndex = leaderBoardEntities[i].TeamIndex,
                 Coins = newCoins
             };
 

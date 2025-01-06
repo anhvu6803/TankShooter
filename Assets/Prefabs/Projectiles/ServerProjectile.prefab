@@ -78,4 +78,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b72d3f12fd809d04bbea28d0065e32d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  projectile: {fileID: 4867031145019210439}
   damage: 20
+--- !u!114 &4867031145019210439 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5276070563684297876, guid: 0adbf2fdb2d2e5c4d95f842aeab19b0f, type: 3}
+  m_PrefabInstance: {fileID: 771088824790799955}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2681780355147378845}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 704a981087c08584c8639d6aabe856be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

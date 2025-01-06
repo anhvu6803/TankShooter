@@ -19,7 +19,7 @@ public class ClientGameManager : IDisposable
     private JoinAllocation joinAllocation;
     private NetworkClient networkClient;
     private MatchplayMatchmaker matchmaker;
-    private UserData userData;
+    public UserData UserData {  get; private set; }
     public async Task<bool> InitAsync()
     {
         await UnityServices.InitializeAsync();
@@ -31,7 +31,7 @@ public class ClientGameManager : IDisposable
         AuthState authState = await AuthenticationWrapper.DoAuth();
         if(authState == AuthState.Authenticated)
         {
-            userData = new UserData
+            UserData = new UserData
             {
                 userName = PlayerPrefs.GetString(NameSelecter.PlayerNameKey, "Missing Name"),
                 userAuthId = AuthenticationService.Instance.PlayerId
@@ -71,7 +71,7 @@ public class ClientGameManager : IDisposable
 
     private void ConnectClient()
     {
-        string payload = JsonUtility.ToJson(userData);
+        string payload = JsonUtility.ToJson(UserData);
         byte[] payLoadBytes = Encoding.UTF8.GetBytes(payload);
         NetworkManager.Singleton.NetworkConfig.ConnectionData = payLoadBytes;
 
@@ -80,7 +80,7 @@ public class ClientGameManager : IDisposable
 
     private async Task<MatchmakerPollingResult> GetMatchAsync()
     {
-        MatchmakingResult matchmakingResult = await matchmaker.Matchmake(userData);
+        MatchmakingResult matchmakingResult = await matchmaker.Matchmake(UserData);
 
         if (matchmakingResult.result == MatchmakerPollingResult.Success)
         {
@@ -95,7 +95,7 @@ public class ClientGameManager : IDisposable
             return;
         }
 
-        userData.userGamePreferences.gameQueue = isTeamQueue ? GameQueue.Team : GameQueue.Solo;
+        UserData.userGamePreferences.gameQueue = isTeamQueue ? GameQueue.Team : GameQueue.Solo;
         MatchmakerPollingResult matchResult = await GetMatchAsync();
         onMatchmakeResponse(matchResult);
     }

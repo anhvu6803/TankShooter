@@ -89,7 +89,7 @@ public class ServerGameManager : IDisposable
     {
         Team team = backfiller.GetTeamByUserId(userData.userAuthId);
 
-        if(!teamIdToTeamIndex.TryGetValue(team.TeamId, out int teamIndex))
+        if (!teamIdToTeamIndex.TryGetValue(team.TeamId, out int teamIndex))
         {
             teamIndex = teamIdToTeamIndex.Count;
             teamIdToTeamIndex.Add(team.TeamId, teamIndex);
